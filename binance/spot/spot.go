@@ -1,10 +1,5 @@
 package spot
 
-import (
-	. "github.com/nntaoli-project/goex/v2/model"
-	. "github.com/nntaoli-project/goex/v2/options"
-)
-
 var (
 	currencyPaircacheMap = make(map[string]*CurrencyPair, 6)
 )

@@ -2,8 +2,8 @@ package spot
 
 import (
 	"errors"
-	. "github.com/nntaoli-project/goex/v2/model"
-	"github.com/nntaoli-project/goex/v2/okx/common"
+	. "github.com/shadowors/goex/v2/model"
+	"github.com/shadowors/goex/v2/okx/common"
 )
 
 type PrvApi struct {

@@ -13,10 +13,10 @@
 package main
 
 import (
-	goexv2 "github.com/nntaoli-project/goex/v2"
-	"github.com/nntaoli-project/goex/v2/logger"
-	"github.com/nntaoli-project/goex/v2/model"
-	"github.com/nntaoli-project/goex/v2/options"
+	goexv2 "github.com/shadowors/goex/v2"
+	"github.com/shadowors/goex/v2/logger"
+	"github.com/shadowors/goex/v2/model"
+	"github.com/shadowors/goex/v2/options"
 	"log"
 )
 
@@ -54,7 +54,7 @@ func main() {
 
 ### FAQ
 #### 1. okx simulated trading
-See ([issues/238](https://github.com/nntaoli-project/goex/issues/238))
+See ([issues/238](https://github.com/shadowors/goex/issues/238))
 
 #### 2. Filled The OrderClientID 
 
