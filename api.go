@@ -1,7 +1,7 @@
 package goex
 
 import (
-	"github.com/nntaoli-project/goex/v2/model"
+	"github.com/shadowors/goex/v2/model"
 )
 
 // IPubRest is a public interface that does not require authorization."
@@ -22,7 +22,7 @@ type IPubRest interface {
 	NewCurrencyPair(baseSym, quoteSym string, opts ...model.OptionParameter) (model.CurrencyPair, error)
 }
 
-//IPrvRest is a private interface specification that requires authorization to call.
+// IPrvRest is a private interface specification that requires authorization to call.
 type IPrvRest interface {
 	GetAccount(coin string) (map[string]model.Account, []byte, error)
 	//CreateOrder

@@ -1,8 +1,7 @@
 package spot
 
 import (
-	. "github.com/nntaoli-project/goex/v2/model"
-	. "github.com/nntaoli-project/goex/v2/options"
+	. "github.com/shadowors/goex/v2/options"
 )
 
 var (

@@ -2,7 +2,6 @@ package futures
 
 import (
 	"errors"
-	. "github.com/nntaoli-project/goex/v2/model"
 )
 
 type CrossPrvApi struct {
