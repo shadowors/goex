@@ -2,7 +2,7 @@ package futures
 
 import (
 	"errors"
-	. "github.com/nntaoli-project/goex/v2/model"
+	. "github.com/shadowors/goex/v2/model"
 )
 
 type IsolatedPrvApi struct {

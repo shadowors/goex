@@ -1,7 +1,7 @@
 package futures
 
 import (
-	. "github.com/nntaoli-project/goex/v2/model"
+	. "github.com/shadowors/goex/v2/model"
 )
 
 func AdaptSideToDirectionAndOffset(side OrderSide) (direction, offset string) {

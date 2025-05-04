@@ -2,10 +2,10 @@ package futures
 
 import (
 	"fmt"
-	"github.com/nntaoli-project/goex/v2/model"
-	"github.com/nntaoli-project/goex/v2/okx/common"
-	"github.com/nntaoli-project/goex/v2/options"
-	"github.com/nntaoli-project/goex/v2/util"
+	"github.com/shadowors/goex/v2/model"
+	"github.com/shadowors/goex/v2/okx/common"
+	"github.com/shadowors/goex/v2/options"
+	"github.com/shadowors/goex/v2/util"
 	"net/http"
 	"net/url"
 )
