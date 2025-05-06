@@ -17,6 +17,10 @@ type GetFuturesAccountResponseUnmarshaler func([]byte) (map[string]model.Futures
 type GetExchangeInfoResponseUnmarshaler func([]byte) (map[string]model.CurrencyPair, error)
 type GetFundingRateResponseUnmarshaler func([]byte) (*model.FundingRate, error)
 type GetFundingRateHistoryResponseUnmarshaler func([]byte) ([]model.FundingRate, error)
+type GetAssetValuationResponseUnmarshaler func([]byte) (*model.AssetValuation, error)
+type GetAssetBalancesResponseUnmarshaler func([]byte) (map[string]model.AssetBalance, error)
+type GetAssetBillsResponseUnmarshaler func([]byte) ([]model.AssetBill, error)
+type GetAssetCurrenciesResponseUnmarshaler func([]byte) ([]model.AssetCurrency, error)
 
 type UnmarshalerOptions struct {
 	ResponseUnmarshaler                      ResponseUnmarshaler
@@ -34,6 +38,10 @@ type UnmarshalerOptions struct {
 	GetExchangeInfoResponseUnmarshaler       GetExchangeInfoResponseUnmarshaler
 	GetFundingRateResponseUnmarshaler        GetFundingRateResponseUnmarshaler
 	GetFundingRateHistoryResponseUnmarshaler GetFundingRateHistoryResponseUnmarshaler
+	GetAssetValuationResponseUnmarshaler     GetAssetValuationResponseUnmarshaler
+	GetAssetBalancesResponseUnmarshaler      GetAssetBalancesResponseUnmarshaler
+	GetAssetBillsResponseUnmarshaler         GetAssetBillsResponseUnmarshaler
+	GetAssetCurrenciesResponseUnmarshaler    GetAssetCurrenciesResponseUnmarshaler
 }
 
 type UnmarshalerOption func(options *UnmarshalerOptions)
@@ -124,5 +132,29 @@ func WithGetFundingRateResponseUnmarshaler(unmarshaler GetFundingRateResponseUnm
 func WithGetFundingRateHistoryResponseUnmarshaler(unmarshaler GetFundingRateHistoryResponseUnmarshaler) UnmarshalerOption {
 	return func(options *UnmarshalerOptions) {
 		options.GetFundingRateHistoryResponseUnmarshaler = unmarshaler
+	}
+}
+
+func WithGetAssetValuationResponseUnmarshaler(unmarshaler GetAssetValuationResponseUnmarshaler) UnmarshalerOption {
+	return func(options *UnmarshalerOptions) {
+		options.GetAssetValuationResponseUnmarshaler = unmarshaler
+	}
+}
+
+func WithGetAssetBalancesResponseUnmarshaler(unmarshaler GetAssetBalancesResponseUnmarshaler) UnmarshalerOption {
+	return func(options *UnmarshalerOptions) {
+		options.GetAssetBalancesResponseUnmarshaler = unmarshaler
+	}
+}
+
+func WithGetAssetBillsResponseUnmarshaler(unmarshaler GetAssetBillsResponseUnmarshaler) UnmarshalerOption {
+	return func(options *UnmarshalerOptions) {
+		options.GetAssetBillsResponseUnmarshaler = unmarshaler
+	}
+}
+
+func WithGetAssetCurrenciesResponseUnmarshaler(unmarshaler GetAssetCurrenciesResponseUnmarshaler) UnmarshalerOption {
+	return func(options *UnmarshalerOptions) {
+		options.GetAssetCurrenciesResponseUnmarshaler = unmarshaler
 	}
 }

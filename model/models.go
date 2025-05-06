@@ -164,3 +164,50 @@ type FundingRate struct {
 	Rate   float64 `json:"rate"`
 	Tm     int64   `json:"tm"` //资金费收取时间
 }
+
+type AssetValuation struct {
+	TotalBal       float64 `json:"total_bal"`       // 总资产折合，单位USD
+	TotalEquity    float64 `json:"total_equity"`    // 净资产折合，单位USD
+	IsolatedEquity float64 `json:"isolated_equity"` // 逐仓仓位权益，单位USD
+	UpdateTime     int64   `json:"update_time"`     // 更新时间，单位毫秒
+	Ccy            string  `json:"ccy"`             // 币种，如USD
+}
+
+type AssetBalance struct {
+	AvailBal   float64 `json:"avail_bal"`   // 可用余额
+	Bal        float64 `json:"bal"`         // 余额
+	Ccy        string  `json:"ccy"`         // 币种
+	FrozenBal  float64 `json:"frozen_bal"`  // 冻结（不可用）
+	UpdateTime int64   `json:"update_time"` // 更新时间，单位毫秒
+}
+
+// AssetBill 资产账单明细
+type AssetBill struct {
+	BillId  string  `json:"bill_id"`  // 账单ID
+	Ccy     string  `json:"ccy"`      // 币种
+	Type    string  `json:"type"`     // 账单类型
+	Amount  float64 `json:"amount"`   // 金额
+	Ts      int64   `json:"ts"`       // 创建时间，Unix时间戳的毫秒数格式
+	SubType string  `json:"sub_type"` // 账单子类型
+	InstId  string  `json:"inst_id"`  // 产品ID，如BTC-USDT-SWAP
+	FromAct string  `json:"from_act"` // 转出账户
+	ToAct   string  `json:"to_act"`   // 转入账户
+	Notes   string  `json:"notes"`    // 备注
+}
+
+// AssetCurrency 币种资产信息
+type AssetCurrency struct {
+	Ccy             string  `json:"ccy"`               // 币种名称，如BTC
+	Name            string  `json:"name"`              // 币种中文名称，不显示则无中文名称
+	Chain           string  `json:"chain"`             // 链信息
+	CanDep          bool    `json:"can_dep"`           // 是否可充值，true 或 false
+	CanWd           bool    `json:"can_wd"`            // 是否可提币，true 或 false
+	CanInternal     bool    `json:"can_internal"`      // 是否可内部转账，true 或 false
+	MinDep          float64 `json:"min_dep"`           // 最小充值量
+	MinWd           float64 `json:"min_wd"`            // 最小提币量
+	MaxWd           float64 `json:"max_wd"`            // 最大提币量
+	WdFee           float64 `json:"wd_fee"`            // 提币固定手续费
+	WdAll           bool    `json:"wd_all"`            // 是否可全部提币，true 或 false
+	DepQuotaFixed   float64 `json:"dep_quota_fixed"`   // 充值固定限额
+	DepQuoteDynamic float64 `json:"dep_quota_dynamic"` // 充值动态限额
+}

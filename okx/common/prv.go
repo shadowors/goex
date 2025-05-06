@@ -3,15 +3,16 @@ package common
 import (
 	"errors"
 	"fmt"
+	"net/http"
+	"net/url"
+	"strings"
+	"time"
+
 	"github.com/shadowors/goex/v2/httpcli"
 	"github.com/shadowors/goex/v2/logger"
 	"github.com/shadowors/goex/v2/model"
 	"github.com/shadowors/goex/v2/options"
 	"github.com/shadowors/goex/v2/util"
-	"net/http"
-	"net/url"
-	"strings"
-	"time"
 )
 
 type Prv struct {
@@ -141,6 +142,81 @@ func (prv *Prv) CancelOrder(pair model.CurrencyPair, id string, opt ...model.Opt
 	}
 
 	return responseBody, err
+}
+
+// GetAssetValuation 获取资产估值
+// currency: 币种(USD、USDT、BTC等)，如果为空字符串，则默认使用账户设置的币种
+func (prv *Prv) GetAssetValuation(currency string) (*model.AssetValuation, []byte, error) {
+	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetValuationUri)
+	params := url.Values{}
+	if currency != "" {
+		params.Set("ccy", currency)
+	}
+
+	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
+	if err != nil {
+		return nil, responseBody, err
+	}
+
+	valuation, err := prv.UnmarshalOpts.GetAssetValuationResponseUnmarshaler(data)
+	return valuation, responseBody, err
+}
+
+// GetAssetBalances 获取资产余额
+// currency: 币种(BTC等)，如果为空字符串，则获取所有币种余额
+func (prv *Prv) GetAssetBalances(currency string) (map[string]model.AssetBalance, []byte, error) {
+	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetBalancesUri)
+	params := url.Values{}
+	if currency != "" {
+		params.Set("ccy", currency)
+	}
+
+	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
+	if err != nil {
+		return nil, responseBody, err
+	}
+
+	balances, err := prv.UnmarshalOpts.GetAssetBalancesResponseUnmarshaler(data)
+	return balances, responseBody, err
+}
+
+// GetAssetBills 获取账户账单明细
+// params:
+//   - currency: 币种，如BTC，不填则返回所有币种
+//   - type: 账单类型，1:充值，2:提现，13:买入，14:卖出，不填则返回所有类型
+//   - startTime: 开始时间，Unix时间戳的毫秒数格式
+//   - endTime: 结束时间，Unix时间戳的毫秒数格式
+//   - limit: 分页返回的结果集数量，默认为100，最大为100
+//   - before: 请求此id之前（更旧的数据）的分页内容
+//   - after: 请求此id之后（更新的数据）的分页内容
+func (prv *Prv) GetAssetBills(params url.Values) ([]model.AssetBill, []byte, error) {
+	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetBillsUri)
+
+	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
+	if err != nil {
+		return nil, responseBody, err
+	}
+
+	bills, err := prv.UnmarshalOpts.GetAssetBillsResponseUnmarshaler(data)
+	return bills, responseBody, err
+}
+
+// GetAssetCurrencies 获取所有币种资产信息
+// currency: 币种，如BTC，不填则返回所有币种
+func (prv *Prv) GetAssetCurrencies(currency string) ([]model.AssetCurrency, []byte, error) {
+	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetCurrenciesUri)
+	params := url.Values{}
+	if currency != "" {
+		params.Set("ccy", currency)
+	}
+
+	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
+	if err != nil {
+		return nil, responseBody, err
+	}
+
+	currencies, err := prv.UnmarshalOpts.GetAssetCurrenciesResponseUnmarshaler(data)
+	return currencies, responseBody, err
 }
 
 func (prv *Prv) DoSignParam(httpMethod, apiUri, apiSecret, reqBody string) (signStr, timestamp string) {

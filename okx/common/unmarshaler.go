@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/buger/jsonparser"
 	"github.com/shadowors/goex/v2/logger"
 	. "github.com/shadowors/goex/v2/model"
 	"github.com/spf13/cast"
-	"time"
 )
 
 type RespUnmarshaler struct {
@@ -425,21 +426,164 @@ func (un *RespUnmarshaler) UnmarshalGetFundingRateResponse(data []byte) (*Fundin
 }
 
 func (un *RespUnmarshaler) UnmarshalGetFundingRateHistoryResponse(data []byte) ([]FundingRate, error) {
-	var rates []FundingRate
-	_, err := jsonparser.ArrayEach(data, func(item []byte, dataType jsonparser.ValueType, offset int, err error) {
-		var rate FundingRate
-		err = jsonparser.ObjectEach(item, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
+	var fundingRates []FundingRate
+	_, err := jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		fundingRate, err := un.UnmarshalGetFundingRateResponse(value)
+		if err != nil {
+			return
+		}
+		fundingRates = append(fundingRates, *fundingRate)
+	})
+	return fundingRates, err
+}
+
+func (un *RespUnmarshaler) UnmarshalGetAssetValuationResponse(data []byte) (*AssetValuation, error) {
+	var av = new(AssetValuation)
+	err := jsonparser.ObjectEach(data[1:len(data)-1], func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
+		valStr := string(value)
+		switch string(key) {
+		case "totalBal":
+			av.TotalBal = cast.ToFloat64(valStr)
+		case "totalEq":
+			av.TotalEquity = cast.ToFloat64(valStr)
+		case "isoEq":
+			av.IsolatedEquity = cast.ToFloat64(valStr)
+		case "ccy":
+			av.Ccy = valStr
+		case "ts":
+			av.UpdateTime = cast.ToInt64(valStr)
+		}
+		return nil
+	})
+	return av, err
+}
+
+func (un *RespUnmarshaler) UnmarshalGetAssetBalancesResponse(data []byte) (map[string]AssetBalance, error) {
+	var balMap = make(map[string]AssetBalance, 8)
+
+	_, err := jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		var bal AssetBalance
+		err = jsonparser.ObjectEach(value, func(key []byte, balData []byte, dataType jsonparser.ValueType, offset int) error {
+			valStr := string(balData)
 			switch string(key) {
-			case "fundingRate":
-				rate.Rate = cast.ToFloat64(string(value))
-			case "fundingTime":
-				rate.Tm = cast.ToInt64(string(value))
+			case "ccy":
+				bal.Ccy = valStr
+			case "availBal":
+				bal.AvailBal = cast.ToFloat64(valStr)
+			case "bal":
+				bal.Bal = cast.ToFloat64(valStr)
+			case "frozenBal":
+				bal.FrozenBal = cast.ToFloat64(valStr)
+			case "uTime":
+				bal.UpdateTime = cast.ToInt64(valStr)
 			}
 			return nil
 		})
-		rates = append(rates, rate)
+
+		if err != nil {
+			return
+		}
+
+		balMap[bal.Ccy] = bal
 	})
-	return rates, err
+
+	return balMap, err
+}
+
+func (un *RespUnmarshaler) UnmarshalGetAssetBillsResponse(data []byte) ([]AssetBill, error) {
+	var (
+		bills []AssetBill
+		err   error
+	)
+
+	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		var bill AssetBill
+		err = jsonparser.ObjectEach(value, func(key []byte, billData []byte, dataType jsonparser.ValueType, offset int) error {
+			valStr := string(billData)
+			switch string(key) {
+			case "billId":
+				bill.BillId = valStr
+			case "ccy":
+				bill.Ccy = valStr
+			case "type":
+				bill.Type = valStr
+			case "subType":
+				bill.SubType = valStr
+			case "instId":
+				bill.InstId = valStr
+			case "amt":
+				bill.Amount = cast.ToFloat64(valStr)
+			case "ts":
+				bill.Ts = cast.ToInt64(valStr)
+			case "notes":
+				bill.Notes = valStr
+			case "toAct":
+				bill.ToAct = valStr
+			case "fromAct":
+				bill.FromAct = valStr
+			}
+			return nil
+		})
+
+		if err != nil {
+			return
+		}
+
+		bills = append(bills, bill)
+	})
+
+	return bills, err
+}
+
+func (un *RespUnmarshaler) UnmarshalGetAssetCurrenciesResponse(data []byte) ([]AssetCurrency, error) {
+	var (
+		currencies []AssetCurrency
+		err        error
+	)
+
+	_, err = jsonparser.ArrayEach(data, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		var currency AssetCurrency
+		err = jsonparser.ObjectEach(value, func(key []byte, currencyData []byte, dataType jsonparser.ValueType, offset int) error {
+			valStr := string(currencyData)
+			switch string(key) {
+			case "ccy":
+				currency.Ccy = valStr
+			case "name":
+				currency.Name = valStr
+			case "chain":
+				currency.Chain = valStr
+			case "canDep":
+				currency.CanDep = valStr == "true" || valStr == "1"
+			case "canWd":
+				currency.CanWd = valStr == "true" || valStr == "1"
+			case "canInternal":
+				currency.CanInternal = valStr == "true" || valStr == "1"
+			case "minDep":
+				currency.MinDep = cast.ToFloat64(valStr)
+			case "minWd":
+				currency.MinWd = cast.ToFloat64(valStr)
+			case "maxWd":
+				currency.MaxWd = cast.ToFloat64(valStr)
+			case "wdFee":
+				currency.WdFee = cast.ToFloat64(valStr)
+			case "wdAll":
+				currency.WdAll = valStr == "true" || valStr == "1"
+			case "depQuotaFixed":
+				currency.DepQuotaFixed = cast.ToFloat64(valStr)
+			case "depQuotaDynamic":
+				currency.DepQuoteDynamic = cast.ToFloat64(valStr)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return
+		}
+
+		currencies = append(currencies, currency)
+	})
+
+	return currencies, err
 }
 
 func (un *RespUnmarshaler) UnmarshalResponse(data []byte, res interface{}) error {

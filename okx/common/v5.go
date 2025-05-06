@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+
 	. "github.com/shadowors/goex/v2/options"
 )
 
@@ -42,6 +43,10 @@ func New() *OKxV5 {
 			GetExchangeInfoUri:       "/api/v5/public/instruments",
 			GetFundingRateUri:        "/api/v5/public/funding-rate",
 			GetFundingRateHistoryUri: "/api/v5/public/funding-rate-history",
+			GetAssetValuationUri:     "/api/v5/asset/asset-valuation",
+			GetAssetBalancesUri:      "/api/v5/asset/balances",
+			GetAssetBillsUri:         "/api/v5/asset/bills",
+			GetAssetCurrenciesUri:    "/api/v5/asset/currencies",
 		},
 		UnmarshalOpts: UnmarshalerOptions{
 			ResponseUnmarshaler:                      unmarshaler.UnmarshalResponse,
@@ -59,6 +64,10 @@ func New() *OKxV5 {
 			GetExchangeInfoResponseUnmarshaler:       unmarshaler.UnmarshalGetExchangeInfoResponse,
 			GetFundingRateResponseUnmarshaler:        unmarshaler.UnmarshalGetFundingRateResponse,
 			GetFundingRateHistoryResponseUnmarshaler: unmarshaler.UnmarshalGetFundingRateHistoryResponse,
+			GetAssetValuationResponseUnmarshaler:     unmarshaler.UnmarshalGetAssetValuationResponse,
+			GetAssetBalancesResponseUnmarshaler:      unmarshaler.UnmarshalGetAssetBalancesResponse,
+			GetAssetBillsResponseUnmarshaler:         unmarshaler.UnmarshalGetAssetBillsResponse,
+			GetAssetCurrenciesResponseUnmarshaler:    unmarshaler.UnmarshalGetAssetCurrenciesResponse,
 		},
 	}
 

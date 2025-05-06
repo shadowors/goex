@@ -15,6 +15,10 @@ type UriOptions struct {
 	GetExchangeInfoUri       string
 	GetFundingRateUri        string
 	GetFundingRateHistoryUri string
+	GetAssetValuationUri     string
+	GetAssetBalancesUri      string
+	GetAssetBillsUri         string
+	GetAssetCurrenciesUri    string
 }
 
 type UriOption func(*UriOptions)
@@ -100,5 +104,29 @@ func WithGetFundingRateUri(uri string) UriOption {
 func WithGetFundingRateHistoryUri(uri string) UriOption {
 	return func(c *UriOptions) {
 		c.GetFundingRateHistoryUri = uri
+	}
+}
+
+func WithGetAssetValuationUri(uri string) UriOption {
+	return func(c *UriOptions) {
+		c.GetAssetValuationUri = uri
+	}
+}
+
+func WithGetAssetBalancesUri(uri string) UriOption {
+	return func(c *UriOptions) {
+		c.GetAssetBalancesUri = uri
+	}
+}
+
+func WithGetAssetBillsUri(uri string) UriOption {
+	return func(c *UriOptions) {
+		c.GetAssetBillsUri = uri
+	}
+}
+
+func WithGetAssetCurrenciesUri(uri string) UriOption {
+	return func(c *UriOptions) {
+		c.GetAssetCurrenciesUri = uri
 	}
 }
