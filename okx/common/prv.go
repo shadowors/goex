@@ -167,9 +167,7 @@ func (prv *Prv) GetAssetValuation(currency string) (*model.AssetValuation, []byt
 func (prv *Prv) GetAssetBalances(currency string) (map[string]model.AssetBalance, []byte, error) {
 	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetBalancesUri)
 	params := url.Values{}
-	if currency != "" {
-		params.Set("ccy", currency)
-	}
+	params.Set("ccy", currency)
 
 	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
 	if err != nil {
@@ -206,9 +204,7 @@ func (prv *Prv) GetAssetBills(params url.Values) ([]model.AssetBill, []byte, err
 func (prv *Prv) GetAssetCurrencies(currency string) ([]model.AssetCurrency, []byte, error) {
 	reqUrl := fmt.Sprintf("%s%s", prv.UriOpts.Endpoint, prv.UriOpts.GetAssetCurrenciesUri)
 	params := url.Values{}
-	if currency != "" {
-		params.Set("ccy", currency)
-	}
+	params.Set("ccy", currency)
 
 	data, responseBody, err := prv.DoAuthRequest(http.MethodGet, reqUrl, &params, nil)
 	if err != nil {
